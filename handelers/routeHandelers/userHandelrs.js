@@ -9,6 +9,8 @@ const data = require("../../library/data");
 
 const { hash } = require("../../helpers/utility");
 
+const { parseJSON } = require("../../helpers/utility");
+
 // Modules scaffolding
 const handeler = {};
 
@@ -21,7 +23,7 @@ handeler.userHandeler = (requestProperties, callback) => {
   }
 };
 handeler._user = {};
-
+//                    USER POST REQUEST
 handeler._user.post = (requestProperties, callback) => {
   // Validation
   const firstName =
@@ -50,7 +52,7 @@ handeler._user.post = (requestProperties, callback) => {
 
   const tosAgreement =
     typeof requestProperties.body.tosAgreement === "boolean" &&
-    requestProperties.body.tosAgreement
+    requestProperties.body.tosAgreement;
 
   if (firstName && lastName && phone && password && tosAgreement) {
     //  Make sure user already exist or not
@@ -88,8 +90,35 @@ handeler._user.post = (requestProperties, callback) => {
     });
   }
 };
+//                    USER GET REQUEST
+
 handeler._user.get = (requestProperties, callback) => {
-  callback(200);
+  // Check the phone no. is valid
+
+  const phone =
+    typeof requestProperties.queryStringObject.phone === "string" &&
+    requestProperties.queryStringObject.phone.trim().length === 11
+      ? requestProperties.queryStringObject.phone
+      : false;
+  console.log("HEllo");
+  if (phone) {
+    // Find the user here
+    data.read("users", phone, (err, u) => {
+      const user = { ...parseJSON(u) };
+      if (!err && user) {
+        delete user.password;
+        callback(200, user);
+      } else {
+        callback(404, {
+          error: "Requested user was not found ! ",
+        });
+      }
+    });
+  } else {
+    callback(404, {
+      error: "Requested user was not found ! ",
+    });
+  }
 };
 handeler._user.put = (requestProperties, callback) => {};
 handeler._user.delete = (requestProperties, callback) => {};
