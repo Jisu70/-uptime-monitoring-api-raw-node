@@ -48,7 +48,7 @@ handler.handleReqRes = (req, res) => {
   req.on('end', () => {
     realData += decoder.end(); // Finalizing the decoding process and appending any remaining data to 'realData'
 
-    console.log(realData); // Logging the received data
+    // console.log(realData); // Logging the received data
 
     chosenHandler(requestProperties, (statusCode, payload) => {
       statusCode = typeof(statusCode) === 'number' ? statusCode : 500; // Checking if the statusCode is a number, otherwise defaulting to 500
@@ -65,16 +65,16 @@ handler.handleReqRes = (req, res) => {
     // Response handling
     // res.setHeader('Content-Type', 'application/json');
     // res.writeHead(200);
-    res.end(JSON.stringify({ message: 'Hello world, this is Sudipta' })); // Sending a response with a JSON payload
+    // res.end(JSON.stringify({ message: 'Hello world, this is Sudipta' })); // Sending a response with a JSON payload
 
   });
 
   // Error handling
-  req.on('error', (err) => {
-    console.log(err); // Logging the error
-    res.writeHead(400); // Setting the response status code to 400 (Bad Request)
-    res.end('Bad Request'); // Sending a response with a plain text payload
-  });
+  // req.on('error', (err) => {
+  //   console.log(err); // Logging the error
+  //   res.writeHead(400); // Setting the response status code to 400 (Bad Request)
+  //   res.end('Bad Request'); // Sending a response with a plain text payload
+  // });
 };
 
 module.exports = handler;
