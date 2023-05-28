@@ -47,7 +47,7 @@ library.create = (dir, file, data, callback) => {
   );
 };
 
-// Read file from data
+// Read data from file
 
 library.read = (dir, file, callback) => {
   fs.readFile(`${library.basedir + dir}/${file}.json`, "utf8", (err, data) => {
@@ -55,7 +55,7 @@ library.read = (dir, file, callback) => {
   });
 };
 
-// For data read and write both [UPDATE]
+// For UPDATE (read and write)
 
 library.update = (dir, file, data, callback) => {
   fs.open(
@@ -65,7 +65,7 @@ library.update = (dir, file, data, callback) => {
       if (!err && fileDescriptor) {
         // convert the data to string
         const stringData = JSON.stringify(data);
-        fs.truncate(fileDescriptor, (err) => {
+        fs.ftruncate(fileDescriptor, (err) => {
           if (!err) {
             // Write to the file and close it
             fs.writeFile(fileDescriptor, stringData, (err) => {
@@ -87,5 +87,13 @@ library.update = (dir, file, data, callback) => {
     }
   );
 };
+
+// For delete or unlink 
+library.delete = (dir, file, callback) => {
+  fs.unlink(`${library.basedir + dir}/${file}.json`, (err) => {
+    if (err) throw err;
+    console.log('file was deleted');
+  });
+}
 
 module.exports = library;

@@ -5,10 +5,13 @@ Date :- 21/may/23  */
 
 // Dependencies
 const { sampleHandeler } = require('./handelers/routeHandelers/sampleHandeler'); // Importing the 'sampleHandeler' function from the './handelers/routeHandelers/sampleHandeler' module
+const { userHandeler } = require('./handelers/routeHandelers/userHandelrs'); // Importing the 'sampleHandeler' function from the './handelers/routeHandelers/sampleHandeler' module
 
 // Routes configuration
 const routes = {
-  'sample': sampleHandeler, // Assigning the 'sampleHandeler' function to the 'sample' route
+  'sample': sampleHandeler,
+  'user' : userHandeler
+   // Assigning the 'sampleHandeler' function to the 'sample' route
 };
 
 module.exports = routes; // Exporting the 'routes' object to make it accessible to other modules

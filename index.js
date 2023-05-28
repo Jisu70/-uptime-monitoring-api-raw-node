@@ -15,8 +15,9 @@ const data = require("./library/data");
 // App object or module scaffolding
 const app = {};
 
-// Testing file system
-//         For creat file
+// [       Testing file system
+
+//          For creat file
 // data.create("test", "newFile", { name: "India", language: "Bangla" }, (err) => {
 //   if (err) {
 //     console.log(`Error occurred:`, err);
@@ -30,11 +31,14 @@ const app = {};
 //   console.log(`Error:`, err);
 // });
 //         For update file
+// data.update("test", "newFile", { name: "ENGLAND", language: "ENGLISH" }, (err) => {
+//   console.log(`Error:`, err);
+// });
 
-data.update("test", "newFile", { name: "ENGAND", language: "ENGLISH" }, (err) => {
-
-  console.log(`Error:`, err);
-});
+//        For delete file 
+// data.delete("test", "newFile",(err) => {
+//   console.log(`Error:`, err);
+// });            ]
 
 // // Configuratione
 // app.config = {           ///   Moving to enviroment.js

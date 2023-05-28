@@ -1,5 +1,8 @@
 /* Title:- Environments.
-Description  :-Handle all environment related things 
+Description  :- This module helps in maintaining different configurations 
+for different environments, allowing you to easily switch between settings 
+when deploying your application to different environments like development, 
+staging, and production.
 Author: Sudipta Jana .
 Date : 21/may/23  */
 
@@ -10,12 +13,14 @@ const environments = {};
 environments.staging = {
   port: 3000,
   envName: "staging",
+  secretKey :'shdvbhjbvshvfsfb'
 };
 
 // production environment
 environments.production = {
   port: 5000,
   envName: "production",
+  secretkey :'jhfghwehfgopiehgfh'
 };
 
 // determine which environment was passed

@@ -8,7 +8,7 @@ const url = require('url'); // Importing the 'url' module for URL parsing
 const { StringDecoder } = require('string_decoder'); // Importing the 'StringDecoder' class from the 'string_decoder' module
 const routes = require('../routes'); // Importing the 'routes' module
 const { notFoundHandeler } = require('../handelers/routeHandelers/notFoundHandeler'); // Importing the 'notFoundHandeler' function from the 'notFoundHandeler' module
-
+const {parseJSON} = require('../helpers/utility')
 // Module scaffolding
 const handler = {};
 
@@ -48,7 +48,7 @@ handler.handleReqRes = (req, res) => {
   req.on('end', () => {
     realData += decoder.end(); // Finalizing the decoding process and appending any remaining data to 'realData'
 
-    // console.log(realData); // Logging the received data
+    requestProperties.body = parseJSON(realData) ;
 
     chosenHandler(requestProperties, (statusCode, payload) => {
       statusCode = typeof(statusCode) === 'number' ? statusCode : 500; // Checking if the statusCode is a number, otherwise defaulting to 500
@@ -56,6 +56,7 @@ handler.handleReqRes = (req, res) => {
       const payloadString = JSON.stringify(payload); // Converting the payload to a JSON string
   
       // Return the final response
+      res.setHeader('content-type','application/json'); // Setting the response status code
       res.writeHead(statusCode); // Setting the response status code
       res.end(payloadString); // Sending the response with the payload
   

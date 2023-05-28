@@ -8,9 +8,8 @@ Date : 21/may/23  */
 const  handeler = {} ;
 
 handeler.sampleHandeler = (requestProperties,callback) =>{
-  console.log(requestProperties)
   callback(200,{
-    message : ' This is a sample url '
+    message : ' This is from  sample url '
   }) ;
 
 }
