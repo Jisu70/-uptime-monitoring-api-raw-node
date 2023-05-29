@@ -91,8 +91,11 @@ library.update = (dir, file, data, callback) => {
 // For delete or unlink 
 library.delete = (dir, file, callback) => {
   fs.unlink(`${library.basedir + dir}/${file}.json`, (err) => {
-    if (err) throw err;
-    console.log('file was deleted');
+    if (!err) {
+      callback( 'User data deleted succesfully' )
+    } else {
+      callback('Cannot delete user')
+    }
   });
 }
 

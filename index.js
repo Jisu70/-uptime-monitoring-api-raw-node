@@ -25,7 +25,7 @@ const app = {};
 //     console.log("Data written to file successfully.");
 //   }
 // });
-//         For read file
+        // For read file
 // data.read("test", "newFile", (err, data) => {
 //   console.log(`Data:`, data);
 //   console.log(`Error:`, err);

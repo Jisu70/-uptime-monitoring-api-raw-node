@@ -14,13 +14,16 @@ const handler = {};
 
 // Handle request and response
 handler.handleReqRes = (req, res) => {
+
   // Request handling
+
   // Get the URL and parse it
+
   const parsedUrl = url.parse(req.url, true); // Parsing the request URL and storing it in 'parsedUrl'
   const path = parsedUrl.pathname; // Extracting the path from 'parsedUrl'
   const trimmedPath = path.replace(/^\/+|\/+$/g, ''); // Removing leading and trailing slashes from the path
   const method = req.method.toLowerCase(); // Extracting the HTTP method and converting it to lowercase
-  const queryStringObj = parsedUrl.searchParams; // Extracting the query parameters from 'parsedUrl'
+  const queryStringObj = parsedUrl.query;// Extracting the query parameters from 'parsedUrl'
   const headersObject = req.headers; // Extracting the request headers
 
   const requestProperties = {
@@ -30,14 +33,15 @@ handler.handleReqRes = (req, res) => {
     method,
     queryStringObj,
     headersObject
-  }; // Creating an object with the extracted request properties
+  };
+  
+  // Creating an object with the extracted request properties
 
   const decoder = new StringDecoder('utf-8'); // Creating a new instance of 'StringDecoder' class with 'utf-8' encoding
+
   let realData = ''; // Variable to store the decoded data
 
   const chosenHandler = routes[trimmedPath] ? routes[trimmedPath] : notFoundHandeler; // Determining the appropriate handler based on the requested path
-
-
 
   // Concept of Buffer
 
