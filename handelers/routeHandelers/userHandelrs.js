@@ -211,8 +211,9 @@ handeler._user.delete = (requestProperties, callback) => {
   if (phone) {
     data.read("users", phone, (err, userData) => {
       if (!err && userData) {
-        data.delete("users", phone, (err) => {
-          if (!err) {
+        data.delete("users", phone, (response) => {
+          console.log('response -> ', !response);
+          if (response) {
             callback(200, {
               message: " User data deletes successfully",
             });

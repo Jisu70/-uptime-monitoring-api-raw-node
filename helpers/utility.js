@@ -9,6 +9,12 @@ const environments = require('./environment')
 const utilities = {}
 
 // parse json string to object 
+/**
+ * This method return parsedJSON
+ * @param {
+ * } jsonString 
+ * @returns 
+ */
 utilities.parseJSON = (jsonString) => {
   let output ;
   try {

@@ -45,16 +45,16 @@ const app = {};
 //   port: 3000, // Setting the server port to 3000
 // };
 
+// Handle request and response
+app.handleReqRes = handleReqRes; // Assigning the 'handleReqRes' function to the 'handleReqRes' property of the 'app' object
+
 // Create server
 app.createServer = () => {
   const server = http.createServer(app.handleReqRes); // Creating an HTTP server using the 'handleReqRes' function
-
   server.listen(environments.port, () => {
     console.log(`Server listening on port ${environments.port}`); // Logging a message when the server starts listening on the specified port
   });
 };
-// Handle request and response
-app.handleReqRes = handleReqRes; // Assigning the 'handleReqRes' function to the 'handleReqRes' property of the 'app' object
 
 // Run the server
 app.createServer(); // Calling the 'createServer' method to start the server and make it listen on the specified port
