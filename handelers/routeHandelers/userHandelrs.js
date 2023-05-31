@@ -25,6 +25,7 @@ handeler.userHandeler = (requestProperties, callback) => {
     callback(405);
   }
 };
+
 handeler._user = {};
 
 //                    USER POST REQUEST
@@ -197,41 +198,41 @@ handeler._user.put = (requestProperties, callback) => {
   }
 };
 
-
 //                    USER DELETE REQUEST
 
 handeler._user.delete = (requestProperties, callback) => {
-  // Check the phone no. is valid
+  // Check if the phone number is valid
   const phone =
     typeof requestProperties.queryStringObj.phone === "string" &&
     requestProperties.queryStringObj.phone.trim().length === 10
-      ? requestProperties.queryStringObj.phone
+      ? requestProperties.queryStringObj.phone.trim()
       : false;
-  console.log(phone);
+
   if (phone) {
+    // Read user data
     data.read("users", phone, (err, userData) => {
       if (!err && userData) {
-        data.delete("users", phone, (response) => {
-          console.log('response -> ', !response);
-          if (response) {
+        // Delete user data
+        data.delete("users", phone, (err) => {
+          if (err) {
             callback(200, {
-              message: " User data deletes successfully",
+              message: "User was successfully deleted!",
             });
           } else {
             callback(500, {
-              error: " Cannot delete user ",
+              error: "There was a server side error!",
             });
           }
         });
       } else {
         callback(500, {
-          error: " server side error ",
+          error: "Server side error",
         });
       }
     });
   } else {
     callback(400, {
-      error: " Invalid Phone Number ",
+      error: "Invalid Phone Number",
     });
   }
 };
