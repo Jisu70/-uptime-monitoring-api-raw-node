@@ -5,10 +5,11 @@ The Uptime Monitor API is a simple and lightweight application that allows users
 
 ## Features:
 
-Link Monitoring: Users can define the links they want to monitor for uptime or downtime.
+Link Monitoring: Users can define the links they want to monitor for uptime or downtime. 
 Uptime Status: The API periodically checks the provided links and determines their current status (up or down).
 RESTful API: The application follows REST architectural principles, allowing users to interact with it using standard HTTP methods.
-Raw Node.js Implementation: The project is implemented using pure Node.js without relying on any third-party modules or packages, showcasing your proficiency in core Node.js concepts.
+Token-Based Authentication: The API employs token-based authentication to ensure secure access and protect user data. 
+Raw Node.js Implementation: The project is implemented using pure Node.js without relying on any third-party modules or packages
 
 ### Getting Started:
 
