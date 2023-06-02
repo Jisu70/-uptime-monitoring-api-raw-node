@@ -42,6 +42,7 @@ handeler._token.post = (requestProperties, callback) => {
     requestProperties.body.password.trim().length > 0
       ? requestProperties.body.password
       : false;
+
   if (phone && password) {
     data.read("users", phone, (err, userData) => {
       let hashedPassword = hash(password);
@@ -107,10 +108,84 @@ handeler._token.get = (requestProperties, callback) => {
 };
 
 //                    USER PUT REQUEST
-handeler._token.put = (requestProperties, callback) => {};
+handeler._token.put = (requestProperties, callback) => {
+  const id =
+    typeof requestProperties.body.id === "string" &&
+    requestProperties.body.id.trim().length === 20
+      ? requestProperties.body.id
+      : false;
+  const extend =
+    typeof requestProperties.body.extend === "boolean" &&
+    requestProperties.body.extend == true
+      ? true
+      : false;
+
+  if (id && extend) {
+    data.read("tokens", id, (err, tokenData) => {
+      let tokenObject = parseJSON(tokenData);
+
+      if (tokenObject.expires > Date.now()) {
+        tokenObject.expires = Date.now() + 60 * 60 * 1000;
+        // store the updated token
+        data.update("tokens", id, tokenObject, () => {
+          if (!err) {
+            callback(200);
+          } else {
+            callback(404, {
+              error: "token already expired! ",
+            });
+          }
+        });
+      } else {
+        callback(404, {
+          error: "token already expired! ",
+        });
+      }
+    });
+  } else {
+    callback(400, {
+      error: "There was a problem in your request  ! ",
+    });
+  }
+};
 
 //                    USER DELETE REQUEST
 
-handeler._token.delete = (requestProperties, callback) => {};
+handeler._token.delete = (requestProperties, callback) => {
+  // Check if the token  is valid
+  const id =
+    typeof requestProperties.queryStringObj.id === "string" &&
+    requestProperties.queryStringObj.id.trim().length === 20
+      ? requestProperties.queryStringObj.id
+      : false;
+
+  if (id) {
+    // Read user data
+    data.read("tokens", id, (err, tokenData) => {
+      if (!err && tokenData) {
+        // Delete user data
+        data.delete("tokens", id, (err) => {
+          if (err) {
+            callback(200, {
+              message: " Token was successfully deleted!",
+            });
+          } else {
+            callback(500, {
+              error: "There was a server side error!",
+            });
+          }
+        });
+      } else {
+        callback(500, {
+          error: "Server side error",
+        });
+      }
+    });
+  } else {
+    callback(400, {
+      error: "Invalid Phone Number",
+    });
+  }
+};
 
 module.exports = handeler;
