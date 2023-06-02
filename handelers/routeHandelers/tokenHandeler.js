@@ -188,4 +188,19 @@ handeler._token.delete = (requestProperties, callback) => {
   }
 };
 
+handeler._token.verify = (id, phone, callback) => {
+  data.read('tokens', id, (err, tokenData) =>{
+    if(!err && tokenData ){
+      if(parseJSON(tokenData) = phone && parseJSON(tokenData).expires > Date.now()){
+        callback(true)
+      }
+      else{
+        callback(false)
+      }
+    }
+    else{
+      callback(false)
+    }
+  })
+}
 module.exports = handeler;
