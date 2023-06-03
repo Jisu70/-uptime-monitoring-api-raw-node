@@ -108,6 +108,7 @@ handeler._token.get = (requestProperties, callback) => {
 };
 
 //                    USER PUT REQUEST
+
 handeler._token.put = (requestProperties, callback) => {
   const id =
     typeof requestProperties.body.id === "string" &&
@@ -123,6 +124,7 @@ handeler._token.put = (requestProperties, callback) => {
   if (id && extend) {
     data.read("tokens", id, (err, tokenData) => {
       let tokenObject = parseJSON(tokenData);
+      
 
       if (tokenObject.expires > Date.now()) {
         tokenObject.expires = Date.now() + 60 * 60 * 1000;
@@ -188,10 +190,11 @@ handeler._token.delete = (requestProperties, callback) => {
   }
 };
 
+//                     Verify the token 
 handeler._token.verify = (id, phone, callback) => {
   data.read('tokens', id, (err, tokenData) =>{
     if(!err && tokenData ){
-      if(parseJSON(tokenData) = phone && parseJSON(tokenData).expires > Date.now()){
+      if (parseJSON(tokenData).phone === phone && parseJSON(tokenData).expires > Date.now()){
         callback(true)
       }
       else{
@@ -203,4 +206,5 @@ handeler._token.verify = (id, phone, callback) => {
     }
   })
 }
+
 module.exports = handeler;

@@ -12,7 +12,7 @@ const { hash } = require("../../helpers/utility");
 
 const { parseJSON } = require("../../helpers/utility");
 
-const { user } = require("../../routes");
+const tokenHandeler = require("./tokenHandeler");
 
 // Modules scaffolding
 const handeler = {};
@@ -107,15 +107,29 @@ handeler._user.get = (requestProperties, callback) => {
       ? requestProperties.queryStringObj.phone
       : false;
   if (phone) {
-    // Find the user here
-    data.read("users", phone, (err, userData) => {
-      const user = { ...parseJSON(userData) };
-      if (!err && user) {
-        delete user.password;
-        callback(200, user);
+    //Verify token
+    const token =
+      typeof requestProperties.headersObject.token === "string"
+        ? requestProperties.headersObject.token
+        : false;
+
+    tokenHandeler._token.verify(token, phone, (tokenId) => {
+      if (tokenId) {
+        // Find the user here
+        data.read("users", phone, (err, userData) => {
+          const user = { ...parseJSON(userData) };
+          if (!err && user) {
+            delete user.password;
+            callback(200, user);
+          } else {
+            callback(404, {
+              error: "canot get the user ! ",
+            });
+          }
+        });
       } else {
-        callback(404, {
-          error: "canot get the user ! ",
+        callback(403, {
+          error: "User authenticatian failed",
         });
       }
     });
@@ -127,6 +141,7 @@ handeler._user.get = (requestProperties, callback) => {
 };
 
 //                    USER PUT REQUEST
+
 handeler._user.put = (requestProperties, callback) => {
   // Check the phone no. is valid
   const phone =
@@ -155,34 +170,48 @@ handeler._user.put = (requestProperties, callback) => {
 
   if (phone) {
     if (firstName || lastName || password) {
-      data.read("users", phone, (err, uData) => {
-        if (!err && uData) {
-          const userData = parseJSON(uData);
-          if (firstName) {
-            userData.firstName = firstName;
-          }
-          if (lastName) {
-            userData.lastName = lastName;
-          }
-          if (password) {
-            userData.password = hash(password);
-          }
+      //Verify token
+      const token =
+        typeof requestProperties.headersObject.token === "string"
+          ? requestProperties.headersObject.token
+          : false;
 
-          // Update data of the user
-          data.update("users", phone, userData, (err) => {
-            if (!err) {
-              callback(200, {
-                message: "User was updated successfully",
+      tokenHandeler._token.verify(token, phone, (tokenId) => {
+        if (tokenId) {
+          // Find the user here
+          data.read("users", phone, (err, uData) => {
+            if (!err && uData) {
+              const userData = parseJSON(uData);
+              if (firstName) {
+                userData.firstName = firstName;
+              }
+              if (lastName) {
+                userData.lastName = lastName;
+              }
+              if (password) {
+                userData.password = hash(password);
+              }
+              // Update data of the user
+              data.update("users", phone, userData, (err) => {
+                if (!err) {
+                  callback(200, {
+                    message: "User was updated successfully",
+                  });
+                } else {
+                  callback(500, {
+                    error: "There was a problem in the server side",
+                  });
+                }
               });
             } else {
-              callback(500, {
-                error: "There was a problem in the server side",
+              callback(400, {
+                error: "You have a problem in your request",
               });
             }
           });
         } else {
-          callback(400, {
-            error: "You have a problem in your request",
+          callback(403, {
+            error: "User authenticatian failed",
           });
         }
       });
@@ -207,26 +236,39 @@ handeler._user.delete = (requestProperties, callback) => {
     requestProperties.queryStringObj.phone.trim().length === 10
       ? requestProperties.queryStringObj.phone.trim()
       : false;
-
   if (phone) {
-    // Read user data
-    data.read("users", phone, (err, userData) => {
-      if (!err && userData) {
-        // Delete user data
-        data.delete("users", phone, (err) => {
-          if (err) {
-            callback(200, {
-              message: "User was successfully deleted!",
+    //Verify token
+    const token =
+      typeof requestProperties.headersObject.token === "string"
+        ? requestProperties.headersObject.token
+        : false;
+
+    tokenHandeler._token.verify(token, phone, (tokenId) => {
+      if (tokenId) {
+        // Read user data
+        data.read("users", phone, (err, userData) => {
+          if (!err && userData) {
+            // Delete user data
+            data.delete("users", phone, (err) => {
+              if (err) {
+                callback(200, {
+                  message: "User was successfully deleted!",
+                });
+              } else {
+                callback(500, {
+                  error: "There was a server side error!",
+                });
+              }
             });
           } else {
             callback(500, {
-              error: "There was a server side error!",
+              error: "Server side error",
             });
           }
         });
       } else {
-        callback(500, {
-          error: "Server side error",
+        callback(403, {
+          error: "User authenticatian failed",
         });
       }
     });
