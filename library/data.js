@@ -79,7 +79,7 @@ library.update = (dir, file, data, callback) => {
                   }
                 });
               } else {
-                callback(`Error while writing to gile `);
+                callback(`Error while writing to File `);
               }
             });
           }
