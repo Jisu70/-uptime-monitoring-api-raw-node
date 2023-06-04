@@ -247,45 +247,48 @@ handeler._check.put = (requestProperties, callback) => {
       // verify the token
       data.read("checks", id, (err, checkData) => {
         if (!err && checkData) {
-          let checkObject = parseJSON(checkData) ;
+          let checkObject = parseJSON(checkData);
           const token =
-          typeof requestProperties.headersObject.token === "string"
-            ? requestProperties.headersObject.token
-            : false;
-            tokenHandeler._token.verify(token, checkObject.userPhone, (tokenIsValid) => {
-              if( tokenIsValid ){
-                if(protocol){
-                  checkObject.protocol = protocol ;
+            typeof requestProperties.headersObject.token === "string"
+              ? requestProperties.headersObject.token
+              : false;
+          tokenHandeler._token.verify(
+            token,
+            checkObject.userPhone,
+            (tokenIsValid) => {
+              if (tokenIsValid) {
+                if (protocol) {
+                  checkObject.protocol = protocol;
                 }
-                if(url){
-                  checkObject.url = url ;
+                if (url) {
+                  checkObject.url = url;
                 }
-                if(method){
-                  checkObject.method = method ;
+                if (method) {
+                  checkObject.method = method;
                 }
-                if(successCodes){
-                  checkObject.successCodes = successCodes ;
-                } 
-                if(timeoutSeconds){
-                  checkObject.timeoutSeconds = timeoutSeconds ;
+                if (successCodes) {
+                  checkObject.successCodes = successCodes;
                 }
-                // now update the object 
-                data.update("check", id, checkObject, (err) => {
-                  if(!err){
-                    callback(200)
-                  }else{
+                if (timeoutSeconds) {
+                  checkObject.timeoutSeconds = timeoutSeconds;
+                }
+                // now update the object
+                data.update("checks", id, checkObject, (err) => {
+                  if (!err) {
+                    callback(200);
+                  } else {
                     callback(500, {
                       error: " There was a server side error ! ",
                     });
                   }
-                })
-              }else{
+                });
+              } else {
                 callback(403, {
                   error: " Authentication problem  ! ",
                 });
               }
-            })
-
+            }
+          );
         } else {
           callback(500, {
             error: " there was problem in server side ! ",
@@ -306,6 +309,95 @@ handeler._check.put = (requestProperties, callback) => {
 
 //                    USER DELETE REQUEST
 
-handeler._check.delete = (requestProperties, callback) => {};
+handeler._check.delete = (requestProperties, callback) => {
+  const id =
+    typeof requestProperties.queryStringObj.id === "string" &&
+    requestProperties.queryStringObj.id.trim().length === 20
+      ? requestProperties.queryStringObj.id
+      : false;
+  if (id) {
+    console.log("id", id);
+    // Lookup the checks
+    data.read("checks", id, (err, checkData) => {
+      if (!err && checkData) {
+        const token =
+          typeof requestProperties.headersObject.token === "string"
+            ? requestProperties.headersObject.token
+            : false;
+        tokenHandeler._token.verify(
+          token,
+          parseJSON(checkData).userPhone,
+          (tokenIsValid) => {
+            if (tokenIsValid) {
+              // Delete the check dat
+              data.delete("checks", id, (err) => {
+                if (!err) {
+                  data.read(
+                    "user",
+                    parseJSON(checkData).phone,
+                    (err, userData) => {
+                      let userObject = parseJSON(userData);
+                      if (!err && userData) {
+                        let userChecks =
+                          typeof userObject.checks === "object " &&
+                          userObject.checks instanceof Array
+                            ? userObject.checks
+                            : [];
+                        // remove the deleted check ID frome user's list of checks
+                        let checkPosition = userChecks.indexOf(id);
+                        if (checkPosition > -1) {
+                          userChecks.splice(checkPosition, 1);
+                          // Resave the user data ;
+                          userObject.checks = userChecks;
+                          data.update(
+                            "users",
+                            userObject.phone,
+                            userObject,
+                            () => {
+                              if (!err) {
+                              } else {
+                                callback(500, {
+                                  error: " The check ID cannot found in user ",
+                                });
+                              }
+                            }
+                          );
+                        } else {
+                          callback(500, {
+                            error: " There was a server side problem  ",
+                          });
+                        }
+                      } else {
+                        callback(500, {
+                          error: " Cannot read user data ",
+                        });
+                      }
+                    }
+                  );
+                } else {
+                  callback(500, {
+                    error: " Cannot delete user data ",
+                  });
+                }
+              });
+            } else {
+              callback(403, {
+                error: " Authentication failure ",
+              });
+            }
+          }
+        );
+      } else {
+        callback(500, {
+          error: " You have a problem in your request ! ",
+        });
+      }
+    });
+  } else {
+    callback(400, {
+      error: "There is a problem in your request ",
+    });
+  }
+};
 
 module.exports = handeler;
