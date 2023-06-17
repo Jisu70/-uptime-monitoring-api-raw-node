@@ -309,97 +309,6 @@ handeler._check.put = (requestProperties, callback) => {
 
 //                    USER DELETE REQUEST
 
-// handeler._check.delete = (requestProperties, callback) => {
-  // const id =
-  //   typeof requestProperties.queryStringObj.id === "string" &&
-  //   requestProperties.queryStringObj.id.trim().length === 20
-  //     ? requestProperties.queryStringObj.id
-  //     : false;
-//   if (id) {
-//     console.log("id", id);
-//     // Lookup the checks
-//     data.read("checks", id, (err, checkData) => {
-//       if (!err && checkData) {
-        // const token =
-        //   typeof requestProperties.headersObject.token === "string"
-        //     ? requestProperties.headersObject.token
-        //     : false;
-//         console.log("token",token);
-//         tokenHandeler._token.verify(
-//           token,
-//           parseJSON(checkData).userPhone,
-//           (tokenIsValid) => {
-//             console.log(checkData);
-//             if (tokenIsValid) {
-//               // Delete the check dat
-//               data.delete("checks", id, (err) => {
-//                 if (err) {
-//                   const userPhone = parseJSON(checkData).userPhone;
-//                   data.read("users", userPhone, (err, userData) => {
-//                     let userObject = parseJSON(userData);
-//                     console.log(userObject);
-//                     if (!err && userData) {
-//                       let userChecks =
-//                         typeof userObject.checks === "object " &&
-//                         userObject.checks instanceof Array
-//                           ? userObject.checks
-//                           : [];
-//                       // remove the deleted check ID frome user's list of checks
-//                       let checkPosition = userChecks.indexOf(id);
-//                       if (checkPosition > -1) {
-//                         userChecks.splice(checkPosition, 1);
-//                         // Resave the user data ;
-//                         userObject.checks = userChecks;
-//                         data.update(
-//                           "users",
-//                           userObject.phone,
-//                           userObject,
-//                           (err) => {
-//                             if (!err) {
-//                               callback(200);
-//                             } else {
-//                               callback(500, {
-//                                 error: " The check ID cannot found in user ",
-//                               });
-//                             }
-//                           }
-//                         );
-//                       } else {
-//                         callback(500, {
-//                           error: " There was a server side problem  ",
-//                         });
-//                       }
-//                     } else {
-//                       callback(500, {
-//                         error: " Cannot read user data ",
-//                       });
-//                     }
-//                   });
-//                 } else {
-//                   callback(500, {
-//                     error: " Cannot delete user data ! ",
-//                   });
-//                 }
-//               });
-//             } else {
-//               callback(403, {
-//                 error: " Authentication failure ",
-//               });
-//             }
-//           }
-//         );
-//       } else {
-//         callback(500, {
-//           error: " You have a problem in your request ! ",
-//         });
-//       }
-//     });
-//   } else {
-//     callback(400, {
-//       error: "There is a problem in your request ",
-//     });
-//   }
-// };
 handeler._check.delete = (requestProperties, callback) => {
   const id =
     typeof requestProperties.queryStringObj.id === "string" &&
@@ -423,7 +332,7 @@ handeler._check.delete = (requestProperties, callback) => {
             if (tokenIsValid) {
               // delete the check data
               data.delete("checks", id, (err) => {
-                if ( !err) {
+                if (!err) {
                   data.read(
                     "users",
                     parseJSON(checkData).userPhone,

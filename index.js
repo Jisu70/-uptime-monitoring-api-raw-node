@@ -1,60 +1,27 @@
-/* Title:- Uptime Monitoring application .
-Description  :-A RESFUL API to monitor up and down time of given links by the user.
+/* Title:-Initial file For project .
+Description  :-Initial file For to start the node server and workers.
 Author: Sudipta Jana .
-Date : 21/may/23  */
+Date : 17/may/23  */
 
 // Dependencies
-const http = require("http"); // Importing the 'http' module for creating an HTTP server
+const server = require('./library/server')
+const workers = require('./library/worker')
 
-const { handleReqRes } = require("./helpers/handelReqRes"); // Importing the 'handleReqRes' function from the './helpers/handelReqRes' module
-
-const environments = require("./helpers/environment");
-
-const data = require("./library/data");
 
 // App object or module scaffolding
 const app = {};
 
-// [       Testing file system
 
-//          For creat file
-// data.create("test", "newFile", { name: "India", language: "Bangla" }, (err) => {
-//   if (err) {
-//     console.log(`Error occurred:`, err);
-//   } else {
-//     console.log("Data written to file successfully.");
-//   }
-// });
-        // For read file
-// data.read("test", "newFile", (err, data) => {
-//   console.log(`Data:`, data);
-//   console.log(`Error:`, err);
-// });
-//         For update file
-// data.update("test", "newFile", { name: "ENGLAND", language: "ENGLISH" }, (err) => {
-//   console.log(`Error:`, err);
-// });
+app.init = () => {
+  // Start the server
+  server.init() ;
+  // Start the workers
+  workers.init() ;
+}
 
-//        For delete file 
-// data.delete("test", "newFile",(err) => {
-//   console.log(`Error:`, err);
-// });            ]
 
-// // Configuratione
-// app.config = {           ///   Moving to enviroment.js
-//   port: 3000, // Setting the server port to 3000
-// };
+app.init() 
 
-// Handle request and response
-app.handleReqRes = handleReqRes; // Assigning the 'handleReqRes' function to the 'handleReqRes' property of the 'app' object
 
-// Create server
-app.createServer = () => {
-  const server = http.createServer(app.handleReqRes); // Creating an HTTP server using the 'handleReqRes' function
-  server.listen(environments.port, () => {
-    console.log(`Server listening on port ${environments.port}`); // Logging a message when the server starts listening on the specified port
-  });
-};
-
-// Run the server
-app.createServer(); // Calling the 'createServer' method to start the server and make it listen on the specified port
+// Export the app 
+module.exports = app ;
