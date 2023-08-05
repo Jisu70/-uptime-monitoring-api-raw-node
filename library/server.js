@@ -22,7 +22,7 @@ server.config = {
 
 // Create server
 server.createServer = () => {
-  const creteServerVarible = http.createServer(app.handleReqRes); // Creating an HTTP server using the 'handleReqRes' function
+  const creteServerVarible = http.createServer(server.handleReqRes); // Creating an HTTP server using the 'handleReqRes' function
   creteServerVarible.listen(server.config.port, () => {
     console.log(`Server listening on port ${server.config.port}`); // Logging a message when the server starts listening on the specified port
   });
@@ -31,9 +31,9 @@ server.createServer = () => {
 server.handleReqRes = handleReqRes; // Assigning the 'handleReqRes' function to the 'handleReqRes' property of the 'app' object
 
 // Run the server
-server.createServer = () => {
+server.init = () => {
   server.createServer( )
 } ; // Calling the 'createServer' method to start the server and make it listen on the specified port
 
 // Server
-module.exports = server /*  */;
+module.exports = server 
